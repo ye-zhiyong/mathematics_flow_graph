@@ -1,35 +1,54 @@
 \documentclass{article}
-
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, graphs, graphdrawing}
-\usegdlibrary{layered} 
+\usetikzlibrary{arrows.meta, graphs, graphdrawing, shapes.geometric}
+\usegdlibrary{layered, force} 
 
 \begin{document}
 
 \begin{tikzpicture}[
     >=Stealth,
     every node/.style={
-        circle,
+        shape=ellipse,
         draw,
-        minimum size=8mm,
+        minimum width=1.8cm,
+        minimum height=1.2cm,
         thick,
-        fill=blue!20
+        align=center,
+        inner sep=3pt,
+        font=\small
     },
     every edge/.style={
         draw,
         ->,
-        thick
+        thick,
+        shorten >=3pt,
+        shorten <=3pt
     }
 ]
 
-\graph [layered layout, grow=right, level distance=3cm] {
-    A [fill=blue!30, as=$\frac{x}{y}$] -> {
-        B [fill=red!30, as=$\sum_{i=1}^n i^2$],
-        C [fill=green!30, as=$\int_a^b f(x)dx$]
-    };
-    B -> D [fill=purple!30, as=$\lim_{x \to \infty} e^{-x}$];
-    C -> D;
+\graph [spring layout, node distance=4cm, random seed=42] {
+
+    "mono\\_incr" [fill=blue!20, as={monotonically increasing}];
+    "supremum" [fill=blue!20, as={supremum}];
+    "mono\\_def" [fill=blue!20, as={$\forall n, a_{n+1} \geq a_n$}];
+    "sup\\_def" [fill=blue!20, as={$\exists M, \forall n, a_n \leq M$}];
+    "limit\\_def" [fill=red!20, as={$\lim\limits_{n\to\infty}a_n = L$}];
+    "cauchy\\_def" [fill=yellow!20, as={$\forall \epsilon, \exists N,$\\$ \forall m,n \geq N, |a_m-a_n|<\epsilon$}];
+    
+    "mono\\_incr" <-> "mono\\_def";
+    "supremum" <-> "sup\\_def";
+    "limit\\_def" <-> "cauchy\\_def";
+    "mono\\_def" -> "limit\\_def";
+    "sup\\_def" -> "limit\\_def";
 };
+
+\tikzset{
+    node repulsion/.style={
+        /tikz/force layout/.cd,
+        node repulsion=1.5cm,
+        spring constant=0.3
+    }
+}
 
 \end{tikzpicture}
 
