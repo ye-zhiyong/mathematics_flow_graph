@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, graphs, graphdrawing, shapes.geometric}
+\usegdlibrary{layered, force} 
+
+\begin{document}
+
+\begin{tikzpicture}[
+    >=Stealth,
+    every node/.style={
+        shape=ellipse,
+        draw,
+        minimum width=1.8cm,
+        minimum height=1.2cm,
+        thick,
+        align=center,
+        inner sep=3pt,
+        font=\small
+    },
+    every edge/.style={
+        draw,
+        ->,
+        thick,
+        shorten >=3pt,
+        shorten <=3pt
+    }
+]
+
+\graph [spring layout, node distance=4cm, random seed=42] {
+
+    "mono_def" [fill=blue!20, as={$ \textbf{(monotonically increasing)}\, \forall n, a_{n+1} \geq a_n $}];
+    "sup_def" [fill=blue!20, as={$ \textbf{(supremum)}\, \exists M, \forall n, a_n \leq M $}];
+    "limit_def" [fill=red!20, as={$ (\lim\limits_{n\to\infty}a_n = L)\, \forall \varepsilon > 0, \exists N \in \mathbf{N}, \forall n > N, |a_{n} - L| < \varepsilon. $}];
+    "cauchy_seq" [fill=yellow!20, as={$ \forall \epsilon, \exists N, \forall m,n \geq N, |a_m-a_n|<\epsilon $}];
+    
+
+    "mono_def" -> "limit_def";
+    "sup_def"  -> "limit_def";
+    "limit_def" <-> "cauchy_seq";
+};
+
+\tikzset{
+    node repulsion/.style={
+        /tikz/force layout/.cd,
+        node repulsion=1.5cm,
+        spring constant=0.3
+    }
+}
+
+\end{tikzpicture}
+
+\end{document}
